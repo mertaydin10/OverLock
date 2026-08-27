@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Overlock</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&family=Outfit:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/css/pad.css" />
+</head>
+<body>
+  <div class="stitch" aria-hidden="true"></div>
+  <header class="top">
+    <div class="brand">
+      <span class="mark">⊘</span>
+      <div>
+        <h1>Overlock</h1>
+        <p>Concurrent edits merge. Nobody loses.</p>
+      </div>
+    </div>
+    <div class="controls">
+      <label>
+        You
+        <input id="name" type="text" maxlength="24" placeholder="Name" autocomplete="nickname" />
+      </label>
+      <label>
+        Room
+        <input id="room" type="text" maxlength="32" spellcheck="false" />
+      </label>
+      <button id="share" type="button">Copy link</button>
+      <span id="status" data-state="off">offline</span>
+    </div>
+  </header>
+
+  <main>
+    <aside class="presence" id="presence"></aside>
+    <section class="sheet">
+      <div class="editor-wrap">
+        <div id="carets" class="carets" aria-hidden="true"></div>
+        <textarea id="pad" placeholder="Open this link in another tab and type. Both sides keep the text." spellcheck="true"></textarea>
+      </div>
+      <footer class="meta">
+        <span id="counts">0 characters · 1 peer</span>
+        <span>YATA CRDT · SignalR</span>
+      </footer>
+    </section>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@microsoft/signalr@8.0.7/dist/browser/signalr.min.js"></script>
+  <script src="/js/yata.js"></script>
+  <script src="/js/pad.js"></script>
+</body>
+</html>
