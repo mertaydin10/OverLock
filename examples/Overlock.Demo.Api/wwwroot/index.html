@@ -8,7 +8,7 @@
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             padding: 20px;
@@ -129,7 +129,7 @@
 
             <div class="editor-box">
                 <h3>📄 İçerik</h3>
-                <textarea id="contentInput" placeholder="Buraya yazın... Değişiklikleriniz diğer kullanıcılarla otomatik senkronize edilecek."></textarea>
+                <textarea id="contentInput" placeholder="Buraya yazın..."></textarea>
             </div>
 
             <button onclick="setField()">💾 Kaydet</button>
@@ -152,9 +152,8 @@
         let clientId = `user-${Math.random().toString(36).substr(2, 9)}`;
         let peers = new Set();
 
-        // Initialize SignalR connection
         async function connect() {
-            const serverUrl = window.location.origin.replace(/:\d+/, ':5001'); // Overlock.Server port
+            const serverUrl = window.location.origin.replace(/:\d+/, ':5001');
             connection = new signalR.HubConnectionBuilder()
                 .withUrl(`${serverUrl}/collab`)
                 .withAutomaticReconnect()
@@ -167,7 +166,6 @@
 
             connection.on("OperationsReceived", (batch) => {
                 console.log("Received operations:", batch);
-                // Apply operations locally
                 batch.operations.forEach(op => {
                     if (op.type === 'set') {
                         updateUIField(op.field, op.value);
@@ -178,13 +176,11 @@
             connection.on("ClientJoined", (peerId, presence) => {
                 peers.add(peerId);
                 updatePeersList();
-                console.log("Client joined:", peerId);
             });
 
             connection.on("ClientLeft", (peerId) => {
                 peers.delete(peerId);
                 updatePeersList();
-                console.log("Client left:", peerId);
             });
 
             try {
@@ -201,7 +197,6 @@
             } catch (err) {
                 console.error("Connection error:", err);
                 document.getElementById("status").textContent = "❌ Bağlantı hatası";
-                document.getElementById("status").className = "status disconnected";
             }
         }
 
@@ -215,7 +210,6 @@
             if (field === 'title') document.getElementById("titleInput").value = value || '';
             if (field === 'content') document.getElementById("contentInput").value = value || '';
             
-            // Update preview
             const currentData = JSON.parse(document.getElementById("dataPreview").textContent || '{}');
             currentData[field] = value;
             document.getElementById("dataPreview").textContent = JSON.stringify(currentData, null, 2);
@@ -258,16 +252,13 @@
                     documentId: DOCUMENT_ID,
                     operations: operations
                 });
-                console.log("Operations sent:", operations);
             } catch (err) {
                 console.error("Send error:", err);
             }
         }
 
-        // Auto-connect on load
         window.addEventListener('load', connect);
 
-        // Auto-save on input (debounced)
         let saveTimeout;
         function autoSave() {
             clearTimeout(saveTimeout);
